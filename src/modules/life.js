@@ -174,7 +174,7 @@ class Life {
                 type: this.PropertyTypes.TLT,
                 name,
                 grade,
-                description,
+                description: this.format(description),
             })
             if(!effect) continue;
             this.#property.effect(effect);
@@ -188,8 +188,8 @@ class Life {
         this.#property.effect(effect);
         const content = {
             type: this.PropertyTypes.EVT,
-            description,
-            postEvent,
+            description: this.format(description),
+            postEvent: postEvent && this.format(postEvent),
             grade,
         }
         if(next) return [content, this.doEvent(next)].flat();
@@ -243,6 +243,23 @@ class Life {
 
     #getPropertys(...types) {
         return util.getListValuesMap(types.flat(), key => this.#property.get(key));
+    }
+
+    format(discription) {
+        return discription.replaceAll(/\{\s*[0-9a-zA-Z_-]+\s*?\}/g, (match) => this.#format(match));
+    }
+
+    #format(key) {
+        switch (key.slice(1, -1).trim().toLowerCase()) {
+            case 'currentyear': return new Date().getFullYear()
+            case 'age': return this.#property.get(this.PropertyTypes.AGE)
+            case 'charm': return this.#property.get(this.PropertyTypes.CHR)
+            case 'intelligence': return this.#property.get(this.PropertyTypes.INT)
+            case 'strength': return this.#property.get(this.PropertyTypes.STR)
+            case 'money': return this.#property.get(this.PropertyTypes.MNY)
+            case 'spirit': return this.#property.get(this.PropertyTypes.SPR)
+            default: return key
+        }
     }
 
     get lastExtendTalent() {
