@@ -26,7 +26,7 @@ class Character {
     }
 
     config({
-        characterPullCount = 3,
+        characterPullCount = 10,
         rateableKnife = 10,
         propertyWeight,
         talentWeight,
