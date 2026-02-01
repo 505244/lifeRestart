@@ -81,7 +81,15 @@ export default class CyberCelebrity extends ui.view.CyberTheme.CelebrityUI {
     random(g) {
         this.#selected = null;
         this.vboxCharacter.destroyChildren(true);
-        const {unique, normal} = core.characterRandom();
+        let {unique, normal} = core.characterRandom();
+        //
+        if (!g) {
+            while(normal.length < 10) {
+                const next = core.characterRandom();
+                normal = [...normal, ...next.normal];
+            }
+            normal = normal.slice(0, 10); 
+        }
         const items = [];
         const uniqueItem = this.generateUnique(unique, ()=>{
             core.generateUnique();
